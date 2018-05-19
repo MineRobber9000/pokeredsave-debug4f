@@ -37,5 +37,7 @@ Akas:
 WhatText:
 	text "Hello! My name"
 	next "is Robert!"
+	para "I want to die."
+	para "Not really!"
 	prompt
 	done
