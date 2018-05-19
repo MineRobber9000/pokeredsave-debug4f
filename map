@@ -1,2 +1,3 @@
-Reset		d321
-Entrypoint	da65
+Entrypoint4F	da65
+Blah		d6b8
+SRAM		a000

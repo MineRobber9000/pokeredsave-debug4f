@@ -2,10 +2,18 @@ import sav,mapparse
 
 m = mapparse.MapFile()
 
+def inMainData(addr):
+	return not (addr<0xd2f7 or addr>=0xda80)
+
 def insert(s,p):
 	with open("{}.bin".format(p),"rb") as f:
 		g = list(f.read())
-		s[1][mainDataOffset(m.locs[p]):mainDataOffset(m.locs[p])+len(g)]=g
+		loc = m.locs[p]
+		if inMainData(loc):
+			s[1][mainDataOffset(m.locs[p]):mainDataOffset(m.locs[p])+len(g)]=g
+		else:
+			loc -= 0xa000
+			s[1][loc:loc+len(g)]=g
 
 def checksum(s):
 	s.mode = 0 # bank:address mode
@@ -20,7 +28,7 @@ def checksum(s):
 	s[1][0x1525] = r^0xFF
 
 def mainDataOffset(addr):
-	if addr<0xd2f7 or addr>=0xda80:
+	if not inMainData(addr):
 		raise Exception("Out of range address: {:04X}".format(addr))
 	return 0x5a3+(addr-0xd2f7)
 

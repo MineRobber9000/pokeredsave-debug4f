@@ -1,5 +1,5 @@
 mod.sav: main.o
-	python linker.py main.o
+	python linker.py main.o payload.sym
 	python hacker.py
 
 main.o: main.asm
@@ -7,5 +7,5 @@ main.o: main.asm
 
 .PHONY: clean
 clean:
-	rm *.bin mod.sav main.o
+	rm *.bin mod.sav main.o payload.sym
 	rm -rf __pycache__

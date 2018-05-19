@@ -1,23 +1,41 @@
+INCLUDE "hwc.asm"
+INCLUDE "tc.asm"
+INCLUDE "charmap.asm"
+
 Predef EQU $3e6d
 predef: MACRO
 	ld a,\1
 	call Predef
 ENDM
 
-Bankswitch EQU $35d6
-SECTION "Entrypoint",ROM0[$da65]
-	ld hl, $d36e
-	ld a,$21
-	ld [hli],a
-	ld a,$d3
-	ld [hl],a
-	predef 43
-	predef 83
-	predef 80
+SECTION "Blah",ROM0[$D6B8]
+CallBase:
+	ld a,SRAM_ENABLE
+	ld [MBC1SRamEnable],a
+	ld a,$01
+	ld [MBC1SRamBankingMode],a
+	ld [MBC1SRamBank],a
+	ld de,.return
+	push de
+	jp hl
+.return	xor a
+	ld [MBC1SRamEnable],a
 	ret
 
+SECTION "Entrypoint4F",ROM0[$da65]
+	ld hl, Akas
+	call CallBase
+	ret
 
-Init EQU $1f49
-SECTION "Reset",ROM0[$d321]
-Reset:
-	jp Init
+PrintText EQU $3C49
+SECTION "SRAM",ROM0[$a000]
+Akas:
+	ld hl, WhatText
+	jp PrintText
+	ret
+
+WhatText:
+	text "Hello! My name"
+	next "is Robert!"
+	prompt
+	done
